@@ -1,14 +1,17 @@
 package mariangelamarasciuolo.menupizze;
 
 import mariangelamarasciuolo.menupizze.entities.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@PropertySource("application.properties")
 public class BeansConfiguration {
 
     @Bean
@@ -101,12 +104,12 @@ public class BeansConfiguration {
     }
 
     @Bean
-    Tavolo getTavolo() {
-        return new Tavolo(5, 4, StatoTavolo.OCCUPATO);
+    Tavolo getTavolo(@Value("${costo.coperto}") double costoCoperto) {
+        return new Tavolo(5, 4, costoCoperto, StatoTavolo.OCCUPATO);
     }
 
     @Bean
-    Ordine getOrdine() {
+    Ordine getOrdine(@Value("${costo.coperto}") double costoCoperto) {
         List<Pizze> pizze = new ArrayList<>();
         pizze.add(getSalamiPizza());
         pizze.add(getSalamiPizza());
@@ -119,7 +122,7 @@ public class BeansConfiguration {
         bevande.add(getWater());
         bevande.add(getWater());
 
-        return new Ordine(pizze, bevande, 4, StatoOrdine.INCORSO, 1, LocalDateTime.now());
+        return new Ordine(pizze, bevande, 4, costoCoperto, StatoOrdine.INCORSO, 1, LocalDateTime.now());
     }
 
 }
